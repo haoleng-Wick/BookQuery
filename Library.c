@@ -55,7 +55,7 @@ void init_book()
 		fclose(fp);
 	}
 	fp = fopen("./bookbase.txt","rb");
-	fseek(fp,0,SEEK_SET);
+	fseek(fp, 0, SEEK_SET);
 	fread(&book_cnt,sizeof(book_cnt),1,fp);
 	fclose(fp);
 
@@ -105,7 +105,7 @@ void add_book()
 
 		//更新书籍数目
 		fp = fopen("./bookbase.txt","rb+");
-		fseek(fp,0,SEEK_SET);
+		fseek(fp, 0, SEEK_SET);
 		fwrite(&book_cnt,sizeof(book_cnt),1,fp);
 		fclose(fp);
 		printf("\t\t\t\t number update, the number now is : %d\n",book_cnt);
@@ -134,7 +134,7 @@ void delete_book()
 	printf("\t\t\t\t please input the name of the book which you will delete: ");
 	scanf("%s",str_name);
 	
-	fseek(fp,sizeof(book_cnt),SEEK_SET);
+	fseek(fp, (long)sizeof(book_cnt), SEEK_SET);
 	for (i = 0; i < number; i++)
 	{
 		fread(&book1,sizeof(struct_book),1,fp);
@@ -148,13 +148,13 @@ void delete_book()
 				strcpy(book1.No,book2.No);
 				strcpy(book1.Name,book2.Name);
 				strcpy(book1.Writer,book2.Writer);
-				fseek(fp,-2*sizeof(struct_book),SEEK_CUR);
+				fseek(fp, (long)-2*sizeof(struct_book), SEEK_CUR);
 				fwrite(&book1,sizeof(struct_book),1,fp);
-				fseek(fp,sizeof(struct_book),SEEK_CUR);
+				fseek(fp, (long)sizeof(struct_book), SEEK_CUR);
 			}
 
 			book_cnt--;
-			fseek(fp,0,SEEK_SET);
+			fseek(fp, 0, SEEK_SET);
 			fwrite(&book_cnt,sizeof(book_cnt),1,fp);
 			printf("\t\t\t\t books\' information and number has updated, the number now is : %d\n",book_cnt);
 
@@ -166,7 +166,7 @@ void delete_book()
 	{
 		FILE * n_fp;
 		n_fp = fopen("./tmp.txt","wb");
-		fseek(fp,0,SEEK_SET);
+		fseek(fp, 0, SEEK_SET);
 		fread(&j,sizeof(j),1,fp);
 		fwrite(&j,sizeof(j),1,n_fp);
 		for(i = 0; i < book_cnt; i++)
@@ -209,7 +209,7 @@ void remake_book()
 	printf("\t\t\t\t please input the name of the book that you will update: ");
 	scanf("%s",str_name);
 	
-	fseek(fp,sizeof(book_cnt),SEEK_SET);
+	fseek(fp, (long)sizeof(book_cnt), SEEK_SET);
 	while(number-- && (fread(&book,sizeof(struct_book),1,fp)) != 0)
 	{
 		if (!strcmp(str_name,book.Name))
@@ -225,7 +225,7 @@ void remake_book()
 			printf("\t\t\t\t Please input the new writer of the book: ");
 			scanf("%s",book.Writer);
 
-			fseek(fp,-sizeof(struct_book),SEEK_CUR);
+			fseek(fp, (long)-sizeof(struct_book), SEEK_CUR);
 			fwrite(&book,sizeof(struct_book),1,fp);
 		}
 	}
@@ -258,7 +258,7 @@ void select_book()
 	scanf("%s",str_name);
 	
 	printf("\t\t\t\t\t    编号 \t   \t     书名 \t\t  作者 \n");
-	fseek(fp,sizeof(book_cnt),SEEK_SET);
+	fseek(fp, (long)sizeof(book_cnt), SEEK_SET);
 	while( number-- && (fread(&book,sizeof(struct_book),1,fp)) != 0)
 	{
 		//if (!strcmp(str_name,book.Name))
@@ -286,12 +286,12 @@ void list_book()
 		exit(EXIT_FAILURE);
 	}
 
-	fseek(fp,0,SEEK_SET);
+	fseek(fp, 0, SEEK_SET);
 	fread(&book_cnt,sizeof(book_cnt),1,fp);
 	printf("\t书籍的总数%d\n",book_cnt);
 	printf("\t\t\t\t\t    编号 \t   \t     书名 \t\t  作者 \n");
 
-	fseek(fp,sizeof(book_cnt),SEEK_SET);
+	fseek(fp, (long)sizeof(book_cnt), SEEK_SET);
 	while( nmb-- && (fread(&book,sizeof(struct_book),1,fp) != 0) )
 	{
 			printf("\t\t\t\t\t %s \t\t 《%s》 \t\t %s \n", book.No,book.Name,book.Writer);
