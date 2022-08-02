@@ -1,9 +1,9 @@
 #ifndef _LIBRARY_H_
 #define _LIBRARY_H_
-#include<stdio.h>
-#include<stdlib.h>
-#include<errno.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
 
 typedef struct 
 {
@@ -15,7 +15,6 @@ typedef struct
 unsigned int book_cnt;
 
 //字符串匹配
-void GetNext(char *T, int *next);
 int KMP(char *S, char *T);
 
 //图书相关函数

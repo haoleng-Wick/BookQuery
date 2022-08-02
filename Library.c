@@ -1,8 +1,11 @@
 #include "Library.h"
+#include "./Login.c"
 
-void GetNext(char *T, int *next)
+// KMP字符串匹配算法
+int KMP(char *S, char *T)
 {
-	next[1] = 0;
+	int next[64] = {0};
+
 	next[2] = 1;
 	int i = 2; int j = 1;
 	while(i < strlen(T))
@@ -19,13 +22,8 @@ void GetNext(char *T, int *next)
 			j = next[j];
 		}
 	}
-}
 
-int KMP(char *S, char *T)
-{
-	int next[64] = {0};
-	GetNext(T,next);
-	int i = 1; int j = 1;
+	i = 1; j = 1;
 	while(i <= strlen(S) && j <= strlen(T)) {
 		if(j == 0 || S[i-1] == T[j-1]) {
 			i++;j++;
@@ -39,6 +37,7 @@ int KMP(char *S, char *T)
 	return -1;
 }
 
+// 初始化加载文件
 void init_book()
 {
 	FILE * fp;
@@ -63,6 +62,7 @@ void init_book()
 	system("sleep 1");
 }
 
+// 添加新书
 void add_book()
 {
 	system("clear");
@@ -116,6 +116,7 @@ void add_book()
 	}
 }
 
+// 删除书籍信息
 void delete_book()
 {
 	system("clear");
@@ -191,6 +192,7 @@ void delete_book()
 		system("sleep 1");
 }
 
+// 修改书籍信息
 void remake_book()
 {
 	system("clear");
@@ -240,6 +242,7 @@ void remake_book()
 	system("sleep 1");
 }
 
+// 查询书籍
 void select_book()
 {
 	system("clear");
@@ -273,6 +276,7 @@ void select_book()
 	while(getchar() != '\n'); 
 }
 
+// 列出书籍
 void list_book()
 {
 	system("clear");
@@ -303,6 +307,7 @@ void list_book()
 	while(getchar() != '\n'); 
 }
 
+// 主界面 由while循环控制刷新
 void Welcome()
 {
 	int choice = 0;
@@ -318,6 +323,7 @@ void Welcome()
 		printf("\t\t\t\t\t     ***3.修改库中书籍的信息 ***\n");
 		printf("\t\t\t\t\t     ***4.查询书库中的某书籍 ***\n");
 		printf("\t\t\t\t\t     ***5.列出书库中所有书籍 ***\n");
+		printf("\t\t\t\t\t     ***6.     用户中心      ***\n");
 		printf("\t\t\t\t\t     ***9.     退出系统      ***\n");
 		printf("\t\t\t\t\t*************************************\n");
 
@@ -344,6 +350,9 @@ void Welcome()
 			case 5:
 				list_book();
 				break;
+			case 6:
+				User_login();
+				break;
 			case 9:
 				system("clear");
 				exit(0);
@@ -354,11 +363,16 @@ void Welcome()
 }
 
 
+// main函数负责调用
 int main (void)
 {
-	book_cnt = 0;
-	init_book();
-	Welcome();
+	if (User_login() == 0)
+	{
+		book_cnt = 0;
+		init_book();
+		Welcome();
+	}
+	system("clear");
 	return 0;
 }
 
