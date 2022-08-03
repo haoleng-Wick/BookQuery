@@ -5,12 +5,31 @@
 #include <errno.h>
 #include <string.h>
 
+// 用户
+typedef struct User {
+	char name[32];
+	char passwd[16];
+	char major[32];
+	char code[8];
+}User;
+
+// 图书
 typedef struct 
 {
 	char No[15];
 	char Name[30];
 	char Writer[30];
 }struct_book;
+
+// 登录模块
+int load_userdata();
+int sigin_up();
+int login(User user);
+int user_page(User user);
+int change_userinfo(User user);
+int User_login();
+
+extern User USER;
 
 unsigned int book_cnt;
 

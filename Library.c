@@ -1,5 +1,7 @@
 #include "Library.h"
-#include "./Login.c"
+
+FILE *file;
+User USER;
 
 // KMP字符串匹配算法
 int KMP(char *S, char *T)
@@ -35,6 +37,166 @@ int KMP(char *S, char *T)
 		return i-(int)strlen(T);
 	}
 	return -1;
+}
+
+// 加载用户文件
+// 若没有该文件则创建一个并且注册一个用户
+int load_userdata()
+{
+	file = fopen("./userdata", "rb");
+	if(file == NULL)
+	{
+		printf("No user registered, please sigin up an account.\n");
+		sigin_up();
+	} else {
+		fclose(file);
+	}
+	return 0;
+}
+
+// 用户注册函数
+int sigin_up()
+{
+	system("clear");
+	file = fopen("./userdata", "ab");
+	User user;
+	printf("\n\n\n\n\n");
+	printf("\t\t\t\t\t*************************************\n");
+
+	printf("\t\t\t\t\t     ***       用户注册    ***\n");
+	printf("\t\t\t\t\t*************************************\n");
+
+	printf("\t\t\t\tusername: ");	scanf("%s", user.name);
+	printf("\n\t\t\t\tpasswd: ");	scanf("%s", user.passwd);
+	printf("\n\t\t\t\tmajor: ");	scanf("%s", user.major);
+	printf("\n\t\t\t\tcode: ");		scanf("%s", user.code);
+
+	strcpy(USER.name, user.name);
+	strcpy(USER.passwd, user.passwd);
+	strcpy(USER.major, user.major);
+	strcpy(USER.code, user.code);
+
+	fwrite(&user, sizeof(user), 1, file);
+	fclose(file);
+	printf("done. \n");
+	while(getchar() != '\n');
+	return 0;
+}
+
+// 登录函数
+int login(User user)
+{
+	system("clear");
+	file = fopen("./userdata", "rb");
+	User user_data;
+	while((fread(&user_data, sizeof(user), 1, file)) != 0)
+	{
+		if(strcmp(user.name, user_data.name) == 0 && strcmp(user.passwd, user_data.passwd) == 0)
+		{
+			while(getchar() != '\n');
+			strcpy(USER.major, user_data.major);
+			strcpy(USER.code, user_data.code);
+			printf("\n\n\n\n\n\t\t\tlogin succesfully! Loading...\n");
+			system("sleep 1");
+			return user_page(user_data);
+		} 
+	}
+	printf("account or password error!\n");
+	fclose(file);
+	return 1;
+}
+
+// 用户界面
+int user_page(User user)
+{
+	system("clear");
+	printf("\tWelcome \"%s\"\n", user.name);
+	printf("Here is your information:\n");
+	printf("Name: %s\t", user.name);
+	printf("\tMajor: %s\t", user.major);
+	printf("\tCode: %s\n", user.code);
+	printf("\n\n");
+	printf("\t\t\t\t\t*************************************\n");
+
+	printf("\t\t\t\t\t     ***1.       修改      ***\n");
+	printf("\t\t\t\t\t     ***2.       退出      ***\n");
+	printf("\t\t\t\t\t     ***0.     进入系统    ***\n");
+	printf("\t\t\t\t\t*************************************\n");
+
+
+	int choice = 0;
+	char c = getchar();
+	choice = c - '0';
+	while(getchar() != '\n');
+
+	if(choice == 0)
+		return 0;
+	else if(choice == 1)
+	{
+		return change_userinfo(user);
+	} else
+		return 1;
+}
+
+// 修改用户数据
+int change_userinfo(User user)
+{
+	file = fopen("./userdata", "rb+");
+	User user_data;
+	while((fread(&user_data, sizeof(user), 1, file)) != 0)
+	{
+		if(!strcmp(user.name, user_data.name))
+		{
+			printf("Please input the new information:\n");
+			fseek(file, (long)-sizeof(user), SEEK_CUR);
+			printf("new_username: ");	scanf("%s", user_data.name);
+			printf("\nnew_passwd: ");	scanf("%s", user_data.passwd);
+			printf("\nnew_major: ");	scanf("%s", user_data.major);
+			printf("\nnew_code: ");		scanf("%s", user_data.code);
+			
+			fwrite(&user_data, sizeof(user_data), 1, file);
+			strcpy(USER.name, user_data.name);
+			strcpy(USER.passwd, user_data.passwd);
+			strcpy(USER.major, user_data.major);
+			strcpy(USER.code, user_data.code);
+		}
+	}
+	while(getchar() != '\n');
+	fclose(file);
+	return 0;
+}
+
+// 用户登录注册界面
+int User_login()
+{
+	system("clear");
+	load_userdata();
+	system("clear");
+	printf("\t\t\t\t\t     ***       用户中心    ***\n");
+	printf("\t\t\t\t\t*************************************\n");
+
+	printf("\t\t\t\t\t     ***1.       登录      ***\n");
+	printf("\t\t\t\t\t     ***2.       注册      ***\n");
+	printf("\t\t\t\t\t     ***9.       退出      ***\n");
+	printf("\t\t\t\t\t*************************************\n");
+
+	int choice = 0;
+	char c = getchar();
+	choice = c - '0';
+	while(getchar() != '\n');
+
+	if(choice == 1)	{
+		printf("\t\t\t\tUser name: ");
+		scanf("%s", USER.name);
+		printf("\t\t\t\tpasswd: ");
+		scanf("%s", USER.passwd);
+		int flag = login(USER);
+		return flag;
+	} else if(choice == 2) {
+		return sigin_up();
+	} else if(choice == 9)
+		return 1;
+	return 1;
 }
 
 // 初始化加载文件
@@ -351,7 +513,7 @@ void Welcome()
 				list_book();
 				break;
 			case 6:
-				User_login();
+				user_page(USER);
 				break;
 			case 9:
 				system("clear");
@@ -364,7 +526,7 @@ void Welcome()
 
 
 // main函数负责调用
-int main (void)
+int main ()
 {
 	if (User_login() == 0)
 	{
