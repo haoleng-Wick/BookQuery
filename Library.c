@@ -1,5 +1,25 @@
 #include "Library.h"
 
+// 清屏函数
+void clear_screen()
+{
+#if defined (__linux__)
+	system("clear");
+#elif defined (_WIN32)
+	system("cls");
+#endif
+}
+
+// 延时函数
+void wait()
+{
+#if defined (__linux__)
+	sleep(1);
+#elif defined (_WIN32)
+	Sleep(1000);
+#endif
+}
+
 FILE *file;
 struct_user USER;
 
@@ -57,7 +77,7 @@ int load_userdata()
 // 用户注册函数
 int sigin_up()
 {
-	system("clear");
+	clear_screen();
 	file = fopen("./userdata", "ab");
 	struct_user user;
 	printf("\n\n\n\n\n");
@@ -86,7 +106,7 @@ int sigin_up()
 // 登录函数
 int login(struct_user user)
 {
-	system("clear");
+	clear_screen();
 	file = fopen("./userdata", "rb");
 	struct_user user_data;
 	while((fread(&user_data, sizeof(user), 1, file)) != 0)
@@ -98,7 +118,7 @@ int login(struct_user user)
 			strcpy(USER.major, user_data.major);
 			strcpy(USER.code, user_data.code);
 			printf("\n\n\n\n\n\t\t\tlogin succesfully! Loading...\n");
-			system("sleep 1");
+			wait();
 			return user_page(user_data);
 		} 
 	}
@@ -110,7 +130,7 @@ int login(struct_user user)
 // 用户界面
 int user_page(struct_user user)
 {
-	system("clear");
+	clear_screen();
 	printf("\tWelcome \"%s\"\n", user.name);
 	printf("Here is your information:\n");
 	printf("Name: %s\t", user.name);
@@ -121,7 +141,7 @@ int user_page(struct_user user)
 
 	printf("\t\t\t\t\t     ***1.       修改      ***\n");
 	printf("\t\t\t\t\t     ***2.       退出      ***\n");
-	printf("\t\t\t\t\t     ***0.     进入系统    ***\n");
+	printf("\t\t\t\t\t     ***9.     进入系统    ***\n");
 	printf("\t\t\t\t\t*************************************\n");
 
 
@@ -130,7 +150,7 @@ int user_page(struct_user user)
 	choice = c - '0';
 	while(getchar() != '\n');
 
-	if (choice == 0)
+	if (choice == 9)
 		return 0;
 	else if (choice == 1)
 	{
@@ -170,9 +190,9 @@ int change_userinfo(struct_user user)
 // 用户登录注册界面
 int User_login()
 {
-	system("clear");
+	clear_screen();
 	load_userdata();
-	system("clear");
+	clear_screen();
 	printf("\t\t\t\t\t     ***       用户中心    ***\n");
 	printf("\t\t\t\t\t*************************************\n");
 
@@ -204,7 +224,7 @@ int User_login()
 void init_book()
 {
 	FILE * fp;
-	system("clear");
+	clear_screen();
 	printf("\n\n\n\n\n");
 	printf("\t\t\t\t file loading ,please wait....\n");
 	if ( (fp = fopen("./bookbase","rb")) == NULL )
@@ -222,27 +242,27 @@ void init_book()
 	fclose(fp);
 
 	printf("\n\n\n\n\n\n\n\n\n\t\t\t\t\t Everything is complete\n");
-	system("sleep 1");
+	wait();
 }
 
 // 添加新书
 void add_book()
 {
-	system("clear");
+	clear_screen();
 	printf("\n\n\n\n\n");
 
 	struct_book book;
 	FILE* fp;
 	int nmb;
 
-	system("clear");
+	clear_screen();
 	printf("\t\t\t\t please intput the number(1~9) of books you will add:\n");
 	scanf("%d",&nmb);
 	if (nmb <= 0 || nmb >= 10)
 	{
 		printf("\t\t\t\tInput error number, will return soon!\n");
 		while(getchar() != '\n');
-		system("sleep 1");
+		wait();
 		return;
 	} 
 	else
@@ -275,14 +295,14 @@ void add_book()
 
 		printf("\t\t\t\t Done! will return soon\n");
 		while(getchar() != '\n');
-		system("sleep 1");
+		wait();
 	}
 }
 
 // 删除书籍信息
 void delete_book()
 {
-	system("clear");
+	clear_screen();
 
 	FILE * fp;
 	struct_book book1,book2;
@@ -352,13 +372,13 @@ void delete_book()
 		printf("\t\t\tNo such book here, will return soon!\n");
 	}
 		while(getchar() != '\n');
-		system("sleep 1");
+	wait();
 }
 
 // 修改书籍信息
 void remake_book()
 {
-	system("clear");
+	clear_screen();
 
 	FILE * fp;
 	struct_book book;
@@ -381,8 +401,8 @@ void remake_book()
 		{
 			flag = 1;
 			printf("\t\t\t\t the book\'s information is listed :\n");
-			printf("\t\t\t\t\t    编号 \t   \t     书名 \t\t  作者 \n");
-			printf("\t\t\t\t\t %s \t\t 《%s》 \t\t %s \n", book.No,book.Name,book.Writer);
+			printf("\t\t\t\t\t编号\t\t\t\t书名\t\t\t\t作者\n");
+			printf("\t\t\t\t\t %s \t\t\t《%s》\t\t\t %s\n", book.No,book.Name,book.Writer);
 			printf("\t\t\t\t Please input the new numbering code of the book: ");
 			scanf("%s",book.No);
 			printf("\t\t\t\t Please input the new name of the book: ");
@@ -402,13 +422,13 @@ void remake_book()
 		printf("\t\t\tNo such book here, will return soon!\n");
 
 	while(getchar() != '\n');
-	system("sleep 1");
+	wait();
 }
 
 // 查询书籍
 void select_book()
 {
-	system("clear");
+	clear_screen();
 
 	FILE * fp;
 	struct_book book;
@@ -423,13 +443,13 @@ void select_book()
 	printf("\t\t\t\t please input the name of the book which you will found: ");
 	scanf("%s",str_name);
 	
-	printf("\t\t\t\t\t    编号 \t   \t     书名 \t\t  作者 \n");
+	printf("\t\t\t\t\t编号\t\t\t\t书名\t\t\t\t作者\n");
 	fseek(fp, (long)sizeof(book_cnt), SEEK_SET);
 	while( number-- && (fread(&book,sizeof(struct_book),1,fp)) != 0)
 	{
 		//if (!strcmp(str_name,book.Name))
 		if (KMP(book.Name,str_name) != -1)
-			printf("\t\t\t\t\t %s \t\t 《%s》 \t\t %s \n", book.No,book.Name,book.Writer);
+			printf("\t\t\t\t\t %s \t\t\t《%s》\t\t\t %s\n", book.No,book.Name,book.Writer);
 	}
 
 	fclose(fp);
@@ -442,7 +462,7 @@ void select_book()
 // 列出书籍
 void list_book()
 {
-	system("clear");
+	clear_screen();
 	FILE * fp;
 	struct_book book;
 	int nmb = book_cnt;
@@ -456,12 +476,12 @@ void list_book()
 	fseek(fp, 0, SEEK_SET);
 	fread(&book_cnt,sizeof(book_cnt),1,fp);
 	printf("\t书籍的总数%d\n",book_cnt);
-	printf("\t\t\t\t\t    编号 \t   \t     书名 \t\t  作者 \n");
+	printf("\t\t\t\t\t编号\t\t\t\t书名\t\t\t\t作者\n");
 
 	fseek(fp, (long)sizeof(book_cnt), SEEK_SET);
 	while( nmb-- && (fread(&book,sizeof(struct_book),1,fp) != 0) )
 	{
-			printf("\t\t\t\t\t %s \t\t 《%s》 \t\t %s \n", book.No,book.Name,book.Writer);
+			printf("\t\t\t\t\t %s \t\t\t《%s》\t\t\t %s\n", book.No,book.Name,book.Writer);
 	}
 	fclose(fp);
 
@@ -477,7 +497,7 @@ void Welcome()
 	int count = 0;
 	do{
 		count++;
-		system("clear");
+		clear_screen();
 		printf("\n\n\n\n\n\t\t\t\t\t   Library Books Management System\n");
 		printf("\t\t\t\t\t*************************************\n");
 
@@ -517,7 +537,7 @@ void Welcome()
 				user_page(USER);
 				break;
 			case 9:
-				system("clear");
+				clear_screen();
 				exit(0);
 			default:
 				break;
@@ -535,7 +555,7 @@ int main ()
 		init_book();
 		Welcome();
 	}
-	system("clear");
+	clear_screen();
 	return 0;
 }
 

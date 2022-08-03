@@ -4,7 +4,14 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+#if defined (__linux__)
+	#include <unistd.h>
+#elif defined (_WIN32)
+	#include <windows.h>
+#endif
 
+
+void wait();
 // 用户
 typedef struct 
 {
