@@ -6,12 +6,13 @@
 #include <string.h>
 
 // 用户
-typedef struct User {
+typedef struct 
+{
 	char name[32];
 	char passwd[16];
 	char major[32];
 	char code[8];
-}User;
+} struct_user;
 
 // 图书
 typedef struct 
@@ -19,17 +20,17 @@ typedef struct
 	char No[15];
 	char Name[30];
 	char Writer[30];
-}struct_book;
+} struct_book;
 
 // 登录模块
 int load_userdata();
 int sigin_up();
-int login(User user);
-int user_page(User user);
-int change_userinfo(User user);
+int login(struct_user user);
+int user_page(struct_user user);
+int change_userinfo(struct_user user);
 int User_login();
 
-extern User USER;
+extern struct_user USER;
 
 unsigned int book_cnt;
 

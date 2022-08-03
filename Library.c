@@ -1,7 +1,7 @@
 #include "Library.h"
 
 FILE *file;
-User USER;
+struct_user USER;
 
 // KMP字符串匹配算法
 int KMP(char *S, char *T)
@@ -12,10 +12,10 @@ int KMP(char *S, char *T)
 	int i = 2; int j = 1;
 	while(i < strlen(T))
 	{
-		if(j == 0 || T[i-1] == T[j-1]) {
+		if (j == 0 || T[i-1] == T[j-1]) {
 			i++;
 			j++;
-			if(T[i-1] != T[j-1]) {
+			if (T[i-1] != T[j-1]) {
 				next[i] = j;
 			} else {
 				next[i] = next[j];
@@ -27,13 +27,13 @@ int KMP(char *S, char *T)
 
 	i = 1; j = 1;
 	while(i <= strlen(S) && j <= strlen(T)) {
-		if(j == 0 || S[i-1] == T[j-1]) {
+		if (j == 0 || S[i-1] == T[j-1]) {
 			i++;j++;
 		} else {
 			j = next[j];
 		}
 	}
-	if(j > strlen(T)) {
+	if (j > strlen(T)) {
 		return i-(int)strlen(T);
 	}
 	return -1;
@@ -44,7 +44,7 @@ int KMP(char *S, char *T)
 int load_userdata()
 {
 	file = fopen("./userdata", "rb");
-	if(file == NULL)
+	if (file == NULL)
 	{
 		printf("No user registered, please sigin up an account.\n");
 		sigin_up();
@@ -59,7 +59,7 @@ int sigin_up()
 {
 	system("clear");
 	file = fopen("./userdata", "ab");
-	User user;
+	struct_user user;
 	printf("\n\n\n\n\n");
 	printf("\t\t\t\t\t*************************************\n");
 
@@ -84,14 +84,15 @@ int sigin_up()
 }
 
 // 登录函数
-int login(User user)
+int login(struct_user user)
 {
 	system("clear");
 	file = fopen("./userdata", "rb");
-	User user_data;
+	struct_user user_data;
 	while((fread(&user_data, sizeof(user), 1, file)) != 0)
 	{
-		if(strcmp(user.name, user_data.name) == 0 && strcmp(user.passwd, user_data.passwd) == 0)
+		if (strcmp(user.name, user_data.name) == 0 
+			&& strcmp(user.passwd, user_data.passwd) == 0)
 		{
 			while(getchar() != '\n');
 			strcpy(USER.major, user_data.major);
@@ -107,7 +108,7 @@ int login(User user)
 }
 
 // 用户界面
-int user_page(User user)
+int user_page(struct_user user)
 {
 	system("clear");
 	printf("\tWelcome \"%s\"\n", user.name);
@@ -129,9 +130,9 @@ int user_page(User user)
 	choice = c - '0';
 	while(getchar() != '\n');
 
-	if(choice == 0)
+	if (choice == 0)
 		return 0;
-	else if(choice == 1)
+	else if (choice == 1)
 	{
 		return change_userinfo(user);
 	} else
@@ -139,13 +140,13 @@ int user_page(User user)
 }
 
 // 修改用户数据
-int change_userinfo(User user)
+int change_userinfo(struct_user user)
 {
 	file = fopen("./userdata", "rb+");
-	User user_data;
+	struct_user user_data;
 	while((fread(&user_data, sizeof(user), 1, file)) != 0)
 	{
-		if(!strcmp(user.name, user_data.name))
+		if (!strcmp(user.name, user_data.name))
 		{
 			printf("Please input the new information:\n");
 			fseek(file, (long)-sizeof(user), SEEK_CUR);
@@ -185,16 +186,16 @@ int User_login()
 	choice = c - '0';
 	while(getchar() != '\n');
 
-	if(choice == 1)	{
+	if (choice == 1)	{
 		printf("\t\t\t\tUser name: ");
 		scanf("%s", USER.name);
 		printf("\t\t\t\tpasswd: ");
 		scanf("%s", USER.passwd);
 		int flag = login(USER);
 		return flag;
-	} else if(choice == 2) {
+	} else if (choice == 2) {
 		return sigin_up();
-	} else if(choice == 9)
+	} else if (choice == 9)
 		return 1;
 	return 1;
 }
@@ -206,16 +207,16 @@ void init_book()
 	system("clear");
 	printf("\n\n\n\n\n");
 	printf("\t\t\t\t file loading ,please wait....\n");
-	if ( (fp = fopen("./bookbase.txt","rb")) == NULL )
+	if ( (fp = fopen("./bookbase","rb")) == NULL )
 	{
 		printf("\t\t\t\t No such file here , so creat it...\n");
-		fp = fopen("./bookbase.txt","wb");
+		fp = fopen("./bookbase","wb");
 		fwrite(&book_cnt,sizeof(book_cnt),1,fp);
 
 		printf("\t\t\t\t creat done!\n");
 		fclose(fp);
 	}
-	fp = fopen("./bookbase.txt","rb");
+	fp = fopen("./bookbase","rb");
 	fseek(fp, 0, SEEK_SET);
 	fread(&book_cnt,sizeof(book_cnt),1,fp);
 	fclose(fp);
@@ -237,7 +238,7 @@ void add_book()
 	system("clear");
 	printf("\t\t\t\t please intput the number(1~9) of books you will add:\n");
 	scanf("%d",&nmb);
-	if(nmb <= 0 || nmb >= 10)
+	if (nmb <= 0 || nmb >= 10)
 	{
 		printf("\t\t\t\tInput error number, will return soon!\n");
 		while(getchar() != '\n');
@@ -248,7 +249,7 @@ void add_book()
 	{
 		book_cnt += nmb;
 
-		if ( ( fp = fopen("./bookbase.txt","ab")) == NULL )
+		if ( ( fp = fopen("./bookbase","ab")) == NULL )
 		{
 			printf("error in func: %s line: %d %s: \n", __func__,__LINE__,strerror(errno));
 			exit(EXIT_FAILURE);
@@ -266,7 +267,7 @@ void add_book()
 		fclose(fp);
 
 		//更新书籍数目
-		fp = fopen("./bookbase.txt","rb+");
+		fp = fopen("./bookbase","rb+");
 		fseek(fp, 0, SEEK_SET);
 		fwrite(&book_cnt,sizeof(book_cnt),1,fp);
 		fclose(fp);
@@ -287,7 +288,7 @@ void delete_book()
 	struct_book book1,book2;
 	int number = book_cnt;
 	int i, j, flag = 0;
-	if ( ( fp = fopen("./bookbase.txt","rb+")) == NULL )
+	if ( ( fp = fopen("./bookbase","rb+")) == NULL )
 	{
 		printf("error in func: %s line: %d %s: \n", __func__,__LINE__,strerror(errno));
 		exit(EXIT_FAILURE);
@@ -301,7 +302,7 @@ void delete_book()
 	for (i = 0; i < number; i++)
 	{
 		fread(&book1,sizeof(struct_book),1,fp);
-		if(!strcmp(book1.Name,str_name))
+		if (!strcmp(book1.Name,str_name))
 		{
 			flag = 1;
 			//将后面的书籍信息前移
@@ -325,7 +326,7 @@ void delete_book()
 		}
 	}
 
-	if(flag == 1)
+	if (flag == 1)
 	{
 		FILE * n_fp;
 		n_fp = fopen("./tmp.txt","wb");
@@ -341,8 +342,8 @@ void delete_book()
 		fclose(n_fp);
 		fclose(fp);
 
-		system("rm bookbase.txt");
-		system("mv tmp.txt bookbase.txt");
+		system("rm bookbase");
+		system("mv tmp.txt bookbase");
 
 		printf("\t\t\tDelete complete, will return soon!\n");
 	}
@@ -363,7 +364,7 @@ void remake_book()
 	struct_book book;
 	int number = book_cnt;
 	int flag = 0;
-	if ( ( fp = fopen("./bookbase.txt","rb+")) == NULL )
+	if ( ( fp = fopen("./bookbase","rb+")) == NULL )
 	{
 		printf("error in func: %s line: %d %s: \n", __func__,__LINE__,strerror(errno));
 		exit(EXIT_FAILURE);
@@ -412,7 +413,7 @@ void select_book()
 	FILE * fp;
 	struct_book book;
 	int number = book_cnt;
-	if ( ( fp = fopen("./bookbase.txt","rb")) == NULL )
+	if ( ( fp = fopen("./bookbase","rb")) == NULL )
 	{
 		printf("error in func: %s line: %d %s: \n", __func__,__LINE__,strerror(errno));
 		exit(EXIT_FAILURE);
@@ -427,7 +428,7 @@ void select_book()
 	while( number-- && (fread(&book,sizeof(struct_book),1,fp)) != 0)
 	{
 		//if (!strcmp(str_name,book.Name))
-		if(KMP(book.Name,str_name) != -1)
+		if (KMP(book.Name,str_name) != -1)
 			printf("\t\t\t\t\t %s \t\t 《%s》 \t\t %s \n", book.No,book.Name,book.Writer);
 	}
 
@@ -446,7 +447,7 @@ void list_book()
 	struct_book book;
 	int nmb = book_cnt;
 
-	if ( ( fp = fopen("./bookbase.txt","rb")) == NULL )
+	if ( ( fp = fopen("./bookbase","rb")) == NULL )
 	{
 		printf("error in func: %s line: %d %s: \n", __func__,__LINE__,strerror(errno));
 		exit(EXIT_FAILURE);
