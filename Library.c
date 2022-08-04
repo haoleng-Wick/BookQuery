@@ -22,6 +22,7 @@ void wait()
 
 FILE *file;
 struct_user USER;
+unsigned int book_cnt;
 
 // KMP字符串匹配算法
 int KMP(char *S, char *T)
@@ -30,7 +31,7 @@ int KMP(char *S, char *T)
 
 	next[2] = 1;
 	int i = 2; int j = 1;
-	while(i < strlen(T))
+	while (i < strlen(T))
 	{
 		if (j == 0 || T[i-1] == T[j-1]) {
 			i++;
@@ -46,7 +47,7 @@ int KMP(char *S, char *T)
 	}
 
 	i = 1; j = 1;
-	while(i <= strlen(S) && j <= strlen(T)) {
+	while (i <= strlen(S) && j <= strlen(T)) {
 		if (j == 0 || S[i-1] == T[j-1]) {
 			i++;j++;
 		} else {
@@ -54,7 +55,7 @@ int KMP(char *S, char *T)
 		}
 	}
 	if (j > strlen(T)) {
-		return i-(int)strlen(T);
+		return (i-(int)strlen(T));
 	}
 	return -1;
 }
@@ -99,7 +100,7 @@ int sigin_up()
 	fwrite(&user, sizeof(user), 1, file);
 	fclose(file);
 	printf("done. \n");
-	while(getchar() != '\n');
+	while (getchar() != '\n');
 	return 0;
 }
 
@@ -109,12 +110,12 @@ int login(struct_user user)
 	clear_screen();
 	file = fopen("./userdata", "rb");
 	struct_user user_data;
-	while((fread(&user_data, sizeof(user), 1, file)) != 0)
+	while ((fread(&user_data, sizeof(user), 1, file)) != 0)
 	{
 		if (strcmp(user.name, user_data.name) == 0 
 			&& strcmp(user.passwd, user_data.passwd) == 0)
 		{
-			while(getchar() != '\n');
+			while (getchar() != '\n');
 			strcpy(USER.major, user_data.major);
 			strcpy(USER.code, user_data.code);
 			printf("\n\n\n\n\n\t\t\tlogin succesfully! Loading...\n");
@@ -124,6 +125,7 @@ int login(struct_user user)
 	}
 	printf("account or password error!\n");
 	fclose(file);
+	wait();
 	return 1;
 }
 
@@ -148,7 +150,7 @@ int user_page(struct_user user)
 	int choice = 0;
 	char c = getchar();
 	choice = c - '0';
-	while(getchar() != '\n');
+	while (getchar() != '\n');
 
 	if (choice == 9)
 		return 0;
@@ -164,7 +166,7 @@ int change_userinfo(struct_user user)
 {
 	file = fopen("./userdata", "rb+");
 	struct_user user_data;
-	while((fread(&user_data, sizeof(user), 1, file)) != 0)
+	while ((fread(&user_data, sizeof(user), 1, file)) != 0)
 	{
 		if (!strcmp(user.name, user_data.name))
 		{
@@ -182,7 +184,7 @@ int change_userinfo(struct_user user)
 			strcpy(USER.code, user_data.code);
 		}
 	}
-	while(getchar() != '\n');
+	while (getchar() != '\n');
 	fclose(file);
 	return 0;
 }
@@ -204,7 +206,7 @@ int User_login()
 	int choice = 0;
 	char c = getchar();
 	choice = c - '0';
-	while(getchar() != '\n');
+	while (getchar() != '\n');
 
 	if (choice == 1)	{
 		printf("\t\t\t\tUser name: ");
@@ -217,6 +219,8 @@ int User_login()
 		return sigin_up();
 	} else if (choice == 9)
 		return 1;
+	printf("intput error! exit\n");
+	wait();
 	return 1;
 }
 
@@ -227,16 +231,16 @@ void init_book()
 	clear_screen();
 	printf("\n\n\n\n\n");
 	printf("\t\t\t\t file loading ,please wait....\n");
-	if ( (fp = fopen("./bookbase","rb")) == NULL )
+	if ( (fp = fopen("./bookbase", "rb")) == NULL )
 	{
 		printf("\t\t\t\t No such file here , so creat it...\n");
-		fp = fopen("./bookbase","wb");
+		fp = fopen("./bookbase", "wb");
 		fwrite(&book_cnt,sizeof(book_cnt),1,fp);
 
 		printf("\t\t\t\t creat done!\n");
 		fclose(fp);
 	}
-	fp = fopen("./bookbase","rb");
+	fp = fopen("./bookbase", "rb");
 	fseek(fp, 0, SEEK_SET);
 	fread(&book_cnt,sizeof(book_cnt),1,fp);
 	fclose(fp);
@@ -261,7 +265,7 @@ void add_book()
 	if (nmb <= 0 || nmb >= 10)
 	{
 		printf("\t\t\t\tInput error number, will return soon!\n");
-		while(getchar() != '\n');
+		while (getchar() != '\n');
 		wait();
 		return;
 	} 
@@ -269,7 +273,7 @@ void add_book()
 	{
 		book_cnt += nmb;
 
-		if ( ( fp = fopen("./bookbase","ab")) == NULL )
+		if ( ( fp = fopen("./bookbase", "ab")) == NULL )
 		{
 			printf("error in func: %s line: %d %s: \n", __func__,__LINE__,strerror(errno));
 			exit(EXIT_FAILURE);
@@ -287,14 +291,14 @@ void add_book()
 		fclose(fp);
 
 		//更新书籍数目
-		fp = fopen("./bookbase","rb+");
+		fp = fopen("./bookbase", "rb+");
 		fseek(fp, 0, SEEK_SET);
 		fwrite(&book_cnt,sizeof(book_cnt),1,fp);
 		fclose(fp);
 		printf("\t\t\t\t number update, the number now is : %d\n",book_cnt);
 
 		printf("\t\t\t\t Done! will return soon\n");
-		while(getchar() != '\n');
+		while (getchar() != '\n');
 		wait();
 	}
 }
@@ -308,7 +312,7 @@ void delete_book()
 	struct_book book1,book2;
 	int number = book_cnt;
 	int i, j, flag = 0;
-	if ( ( fp = fopen("./bookbase","rb+")) == NULL )
+	if ( ( fp = fopen("./bookbase", "rb+")) == NULL )
 	{
 		printf("error in func: %s line: %d %s: \n", __func__,__LINE__,strerror(errno));
 		exit(EXIT_FAILURE);
@@ -349,7 +353,7 @@ void delete_book()
 	if (flag == 1)
 	{
 		FILE * n_fp;
-		n_fp = fopen("./tmp.txt","wb");
+		n_fp = fopen("./tmp.txt", "wb");
 		fseek(fp, 0, SEEK_SET);
 		fread(&j,sizeof(j),1,fp);
 		fwrite(&j,sizeof(j),1,n_fp);
@@ -371,12 +375,12 @@ void delete_book()
 	{
 		printf("\t\t\tNo such book here, will return soon!\n");
 	}
-		while(getchar() != '\n');
+		while (getchar() != '\n');
 	wait();
 }
 
 // 修改书籍信息
-void remake_book()
+void reset_book()
 {
 	clear_screen();
 
@@ -384,7 +388,7 @@ void remake_book()
 	struct_book book;
 	int number = book_cnt;
 	int flag = 0;
-	if ( ( fp = fopen("./bookbase","rb+")) == NULL )
+	if ( ( fp = fopen("./bookbase", "rb+")) == NULL )
 	{
 		printf("error in func: %s line: %d %s: \n", __func__,__LINE__,strerror(errno));
 		exit(EXIT_FAILURE);
@@ -395,7 +399,7 @@ void remake_book()
 	scanf("%s",str_name);
 	
 	fseek(fp, (long)sizeof(book_cnt), SEEK_SET);
-	while(number-- && (fread(&book,sizeof(struct_book),1,fp)) != 0)
+	while (number-- && (fread(&book,sizeof(struct_book),1,fp)) != 0)
 	{
 		if (!strcmp(str_name,book.Name))
 		{
@@ -421,7 +425,7 @@ void remake_book()
 	else
 		printf("\t\t\tNo such book here, will return soon!\n");
 
-	while(getchar() != '\n');
+	while (getchar() != '\n');
 	wait();
 }
 
@@ -433,7 +437,7 @@ void select_book()
 	FILE * fp;
 	struct_book book;
 	int number = book_cnt;
-	if ( ( fp = fopen("./bookbase","rb")) == NULL )
+	if ( ( fp = fopen("./bookbase", "rb")) == NULL )
 	{
 		printf("error in func: %s line: %d %s: \n", __func__,__LINE__,strerror(errno));
 		exit(EXIT_FAILURE);
@@ -445,7 +449,7 @@ void select_book()
 	
 	printf("\t\t\t\t\t编号\t\t\t\t书名\t\t\t\t作者\n");
 	fseek(fp, (long)sizeof(book_cnt), SEEK_SET);
-	while( number-- && (fread(&book,sizeof(struct_book),1,fp)) != 0)
+	while ( number-- && (fread(&book,sizeof(struct_book),1,fp)) != 0)
 	{
 		//if (!strcmp(str_name,book.Name))
 		if (KMP(book.Name,str_name) != -1)
@@ -456,7 +460,7 @@ void select_book()
 
 	printf("\t\t\t\t press any key to continue!\n");
 	getchar();
-	while(getchar() != '\n'); 
+	while (getchar() != '\n'); 
 }
 
 // 列出书籍
@@ -467,7 +471,7 @@ void list_book()
 	struct_book book;
 	int nmb = book_cnt;
 
-	if ( ( fp = fopen("./bookbase","rb")) == NULL )
+	if ( ( fp = fopen("./bookbase", "rb")) == NULL )
 	{
 		printf("error in func: %s line: %d %s: \n", __func__,__LINE__,strerror(errno));
 		exit(EXIT_FAILURE);
@@ -479,7 +483,7 @@ void list_book()
 	printf("\t\t\t\t\t编号\t\t\t\t书名\t\t\t\t作者\n");
 
 	fseek(fp, (long)sizeof(book_cnt), SEEK_SET);
-	while( nmb-- && (fread(&book,sizeof(struct_book),1,fp) != 0) )
+	while ( nmb-- && (fread(&book,sizeof(struct_book),1,fp) != 0) )
 	{
 			printf("\t\t\t\t\t %s \t\t\t《%s》\t\t\t %s\n", book.No,book.Name,book.Writer);
 	}
@@ -487,7 +491,7 @@ void list_book()
 
 	printf("\tpress any key to continue\n");
 	getchar();
-	while(getchar() != '\n'); 
+	while (getchar() != '\n'); 
 }
 
 // 主界面 由while循环控制刷新
@@ -514,7 +518,7 @@ void Welcome()
 		//然后清除之后输入缓冲区的字符
 		char c = getchar();
 		choice = c - '0';
-		while(getchar() != '\n');
+		while (getchar() != '\n');
 
 		switch(choice)
 		{
@@ -525,7 +529,7 @@ void Welcome()
 				delete_book();
 				break;
 			case 3:
-				remake_book();
+				reset_book();
 				break;
 			case 4:
 				select_book();
@@ -542,7 +546,7 @@ void Welcome()
 			default:
 				break;
 		}
-	}while(choice != 9);
+	}while (choice != 9);
 }
 
 
