@@ -67,7 +67,8 @@ int load_userdata()
 	file = fopen("./userdata", "rb");
 	if (file == NULL)
 	{
-		printf("No user registered, please sigin up an account.\n");
+		printf("暂时没有新人入驻,欢迎加入.\n");
+		wait();
 		sigin_up();
 	} else {
 		fclose(file);
@@ -87,10 +88,10 @@ int sigin_up()
 	printf("\t\t\t\t\t     ***       用户注册    ***\n");
 	printf("\t\t\t\t\t*************************************\n");
 
-	printf("\t\t\t\tusername: ");	scanf("%s", user.name);
-	printf("\n\t\t\t\tpasswd: ");	scanf("%s", user.passwd);
-	printf("\n\t\t\t\tmajor: ");	scanf("%s", user.major);
-	printf("\n\t\t\t\tcode: ");		scanf("%s", user.code);
+	printf("\t\t\t\t用户名: ");	scanf("%s", user.name);
+	printf("\n\t\t\t\t密码: ");	scanf("%s", user.passwd);
+	printf("\n\t\t\t\t专业: ");	scanf("%s", user.major);
+	printf("\n\t\t\t\t编码: ");		scanf("%s", user.code);
 
 	strcpy(USER.name, user.name);
 	strcpy(USER.passwd, user.passwd);
@@ -118,12 +119,12 @@ int login(struct_user user)
 			while (getchar() != '\n');
 			strcpy(USER.major, user_data.major);
 			strcpy(USER.code, user_data.code);
-			printf("\n\n\n\n\n\t\t\tlogin succesfully! Loading...\n");
+			printf("\n\n\n\n\n\t\t\t欢迎老爷回来，等你很久了！\n");
 			wait();
 			return user_page(user_data);
 		} 
 	}
-	printf("account or password error!\n");
+	printf("是不是输错了，或者我出问题啦!\n");
 	fclose(file);
 	wait();
 	return 1;
@@ -133,17 +134,17 @@ int login(struct_user user)
 int user_page(struct_user user)
 {
 	clear_screen();
-	printf("\tWelcome \"%s\"\n", user.name);
-	printf("Here is your information:\n");
-	printf("Name: %s\t", user.name);
-	printf("\tMajor: %s\t", user.major);
-	printf("\tCode: %s\n", user.code);
+	printf("\t\t\t\t\t\t欢迎欢迎，热烈欢迎!  >> \"%s\"\n", user.name);
+	printf("\t\t\t\t\t\t老爷您的信息如下,希望没有出错:\n");
+	printf("\t\t\t\t\t\t用户名: %s\n", user.name);
+	printf("\t\t\t\t\t\t专业: %s\n", user.major);
+	printf("\t\t\t\t\t\t编码: %s\n", user.code);
 	printf("\n\n");
 	printf("\t\t\t\t\t*************************************\n");
 
-	printf("\t\t\t\t\t     ***1.       修改      ***\n");
-	printf("\t\t\t\t\t     ***2.       退出      ***\n");
-	printf("\t\t\t\t\t     ***9.     进入系统    ***\n");
+	printf("\t\t\t\t\t     ***1.       用户重开     ***\n");
+	printf("\t\t\t\t\t     ***2.   不响丸啦,赶紧退  ***\n");
+	printf("\t\t\t\t\t     ***9.  我等不及了,赶紧进 ***\n");
 	printf("\t\t\t\t\t*************************************\n");
 
 
@@ -170,12 +171,12 @@ int change_userinfo(struct_user user)
 	{
 		if (!strcmp(user.name, user_data.name))
 		{
-			printf("Please input the new information:\n");
+			printf("请输入新的信息:\n");
 			fseek(file, (long)-sizeof(user), SEEK_CUR);
-			printf("new_username: ");	scanf("%s", user_data.name);
-			printf("\nnew_passwd: ");	scanf("%s", user_data.passwd);
-			printf("\nnew_major: ");	scanf("%s", user_data.major);
-			printf("\nnew_code: ");		scanf("%s", user_data.code);
+			printf("新用户名: ");	scanf("%s", user_data.name);
+			printf("\n新密码: ");	scanf("%s", user_data.passwd);
+			printf("\n新专业: ");	scanf("%s", user_data.major);
+			printf("\n新编码: ");		scanf("%s", user_data.code);
 			
 			fwrite(&user_data, sizeof(user_data), 1, file);
 			strcpy(USER.name, user_data.name);
@@ -209,9 +210,9 @@ int User_login()
 	while (getchar() != '\n');
 
 	if (choice == 1)	{
-		printf("\t\t\t\tUser name: ");
+		printf("\t\t\t\t用户名: ");
 		scanf("%s", USER.name);
-		printf("\t\t\t\tpasswd: ");
+		printf("\t\t\t\t密码: ");
 		scanf("%s", USER.passwd);
 		int flag = login(USER);
 		return flag;
@@ -219,7 +220,7 @@ int User_login()
 		return sigin_up();
 	} else if (choice == 9)
 		return 1;
-	printf("intput error! exit\n");
+	printf("输入错误,即将退出系统\n");
 	wait();
 	return 1;
 }
@@ -230,14 +231,14 @@ void init_book()
 	FILE * fp;
 	clear_screen();
 	printf("\n\n\n\n\n");
-	printf("\t\t\t\t file loading ,please wait....\n");
+	printf("\t\t\t\t 加载中，请稍后....\n");
 	if ( (fp = fopen("./bookbase", "rb")) == NULL )
 	{
-		printf("\t\t\t\t No such file here , so creat it...\n");
+		printf("\t\t\t\t 没有初始化文件，即将自动创建...\n");
 		fp = fopen("./bookbase", "wb");
 		fwrite(&book_cnt,sizeof(book_cnt),1,fp);
 
-		printf("\t\t\t\t creat done!\n");
+		printf("\t\t\t\t 创建完成!\n");
 		fclose(fp);
 	}
 	fp = fopen("./bookbase", "rb");
@@ -245,7 +246,7 @@ void init_book()
 	fread(&book_cnt,sizeof(book_cnt),1,fp);
 	fclose(fp);
 
-	printf("\n\n\n\n\n\n\n\n\n\t\t\t\t\t Everything is complete\n");
+	printf("\n\n\n\n\n\n\n\n\n\t\t\t\t\t 一切准备就绪，一起摇滚吧！\n");
 	wait();
 }
 
@@ -260,11 +261,11 @@ void add_book()
 	int nmb;
 
 	clear_screen();
-	printf("\t\t\t\t please intput the number(1~9) of books you will add:\n");
+	printf("\t\t\t\t 请输入要增加的书的数量(1~9):\n");
 	scanf("%d",&nmb);
 	if (nmb <= 0 || nmb >= 10)
 	{
-		printf("\t\t\t\tInput error number, will return soon!\n");
+		printf("\t\t\t\t输入错误，即将返回!\n");
 		while (getchar() != '\n');
 		wait();
 		return;
@@ -280,11 +281,11 @@ void add_book()
 		}
 		for(int i = 0; i < nmb; i++)
 		{
-			printf("\t\t\t\t Please input the numbering code of the book%d: ",i+1);
+			printf("\t\t\t\t 请输入第%d本书的编号: ",i+1);
 			scanf("%s",book.No);
-			printf("\t\t\t\t Please input the name of the book%d: ",i+1);
+			printf("\t\t\t\t 请输入第%d本书的书名: ",i+1);
 			scanf("%s",book.Name);
-			printf("\t\t\t\t Please input the writer of the book%d: ",i+1);
+			printf("\t\t\t\t 请输入第%d本书的作者: ",i+1);
 			scanf("%s",book.Writer);
 			fwrite(&book,sizeof(struct_book),1,fp);
 		}
@@ -295,9 +296,9 @@ void add_book()
 		fseek(fp, 0, SEEK_SET);
 		fwrite(&book_cnt,sizeof(book_cnt),1,fp);
 		fclose(fp);
-		printf("\t\t\t\t number update, the number now is : %d\n",book_cnt);
+		printf("\t\t\t\t 书籍数目已更新，现在书籍数目: %d\n",book_cnt);
 
-		printf("\t\t\t\t Done! will return soon\n");
+		printf("\t\t\t\t 任务完成，即将返回!\n");
 		while (getchar() != '\n');
 		wait();
 	}
@@ -319,7 +320,7 @@ void delete_book()
 	}
 
 	char str_name[30] = {0};
-	printf("\t\t\t\t please input the name of the book which you will delete: ");
+	printf("\t\t\t\t 请输入你要删除的书的书名: ");
 	scanf("%s",str_name);
 	
 	fseek(fp, (long)sizeof(book_cnt), SEEK_SET);
@@ -344,7 +345,7 @@ void delete_book()
 			book_cnt--;
 			fseek(fp, 0, SEEK_SET);
 			fwrite(&book_cnt,sizeof(book_cnt),1,fp);
-			printf("\t\t\t\t books\' information and number has updated, the number now is : %d\n",book_cnt);
+			printf("\t\t\t\t books\' 书籍信息已更新，目前书籍数目: %d\n",book_cnt);
 
 			break;
 		}
@@ -369,11 +370,11 @@ void delete_book()
 		system("rm bookbase");
 		system("mv tmp.txt bookbase");
 
-		printf("\t\t\tDelete complete, will return soon!\n");
+		printf("\t\t\t任务完成，即将返回!\n");
 	}
 	else
 	{
-		printf("\t\t\tNo such book here, will return soon!\n");
+		printf("\t\t\t抱歉，库中并没有该书籍，是不是老爷眼花了!\n");
 	}
 		while (getchar() != '\n');
 	wait();
@@ -395,7 +396,7 @@ void reset_book()
 	}
 
 	char str_name[30] = {0};
-	printf("\t\t\t\t please input the name of the book that you will update: ");
+	printf("\t\t\t\t 请输入要修改的书籍的名称: ");
 	scanf("%s",str_name);
 	
 	fseek(fp, (long)sizeof(book_cnt), SEEK_SET);
@@ -404,14 +405,14 @@ void reset_book()
 		if (!strcmp(str_name,book.Name))
 		{
 			flag = 1;
-			printf("\t\t\t\t the book\'s information is listed :\n");
+			printf("\t\t\t\t 找到了，老爷请过目 :\n");
 			printf("\t\t\t\t\t编号\t\t\t\t书名\t\t\t\t作者\n");
 			printf("\t\t\t\t\t %s \t\t\t《%s》\t\t\t %s\n", book.No,book.Name,book.Writer);
-			printf("\t\t\t\t Please input the new numbering code of the book: ");
+			printf("\t\t\t\t 请输入新的编码: ");
 			scanf("%s",book.No);
-			printf("\t\t\t\t Please input the new name of the book: ");
+			printf("\t\t\t\t 请输入新的书名: ");
 			scanf("%s",book.Name);
-			printf("\t\t\t\t Please input the new writer of the book: ");
+			printf("\t\t\t\t 请输入新的作者: ");
 			scanf("%s",book.Writer);
 
 			fseek(fp, (long)-sizeof(struct_book), SEEK_CUR);
@@ -421,9 +422,9 @@ void reset_book()
 
 	fclose(fp);
 	if (flag == 1)
-		printf("\t\t\tRemake complete, will return soon!\n");
+		printf("\t\t\t修改完成，即将返回!\n");
 	else
-		printf("\t\t\tNo such book here, will return soon!\n");
+		printf("\t\t\t完啦没找到，溜了溜了!\n");
 
 	while (getchar() != '\n');
 	wait();
@@ -444,7 +445,7 @@ void select_book()
 	}
 
 	char str_name[30] = {0};
-	printf("\t\t\t\t please input the name of the book which you will found: ");
+	printf("\t\t\t\t 请输入将要查询的书名的关键字: ");
 	scanf("%s",str_name);
 	
 	printf("\t\t\t\t\t编号\t\t\t\t书名\t\t\t\t作者\n");
@@ -458,7 +459,7 @@ void select_book()
 
 	fclose(fp);
 
-	printf("\t\t\t\t press any key to continue!\n");
+	printf("\t\t\t\t 按任意键继续!\n");
 	getchar();
 	while (getchar() != '\n'); 
 }
@@ -489,7 +490,7 @@ void list_book()
 	}
 	fclose(fp);
 
-	printf("\tpress any key to continue\n");
+	printf("\t 随便按，我没事！\n");
 	getchar();
 	while (getchar() != '\n'); 
 }
@@ -553,6 +554,9 @@ void Welcome()
 // main函数负责调用
 int main ()
 {
+#if defined(_WIN32)
+	system("chcp 65001");
+#endif
 	if (User_login() == 0)
 	{
 		book_cnt = 0;
