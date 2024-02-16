@@ -9,7 +9,7 @@
 
 ___另外，请原谅这里面的超多bug，您可以给我留言!感激不尽！___
 
-我的邮箱是： 2604918320@qq.com
+我的邮箱是： yhx2604198320@163.com
 <dir style="float: right; width: 20%; padding: 5px;">
 <img src="./screenshots/rabbit.gif" style="box-shadow: 8px 8px 8px rgba(0.2,0.4,0.3,0.5);">
 </dir>
